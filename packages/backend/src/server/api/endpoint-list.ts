@@ -443,3 +443,15 @@ export * as 'chat/rooms/invitations/outbox' from './endpoints/chat/rooms/invitat
 export * as 'chat/history' from './endpoints/chat/history.js';
 export * as 'chat/read-all' from './endpoints/chat/read-all.js';
 export * as 'v2/admin/emoji/list' from './endpoints/v2/admin/emoji/list.js';
+export * as 'vrchat/search' from './endpoints/vrchat/search.js';
+export * as 'vrchat/bind' from './endpoints/vrchat/bind.js';
+export * as 'vrchat/verify' from './endpoints/vrchat/verify.js';
+export * as 'vrchat/unbind' from './endpoints/vrchat/unbind.js';
+export * as 'vrchat/info' from './endpoints/vrchat/info.js';
+export * as 'vrchat/refresh' from './endpoints/vrchat/refresh.js';
+export * as 'vrchat/config' from './endpoints/vrchat/config.js';
+export * as 'admin/vrchat/config' from './endpoints/admin/vrchat/config.js';
+export * as 'admin/vrchat/update-config' from './endpoints/admin/vrchat/update-config.js';
+export * as 'admin/vrchat/login' from './endpoints/admin/vrchat/login.js';
+export * as 'admin/vrchat/verify-2fa' from './endpoints/admin/vrchat/verify-2fa.js';
+export * as 'admin/vrchat/status' from './endpoints/admin/vrchat/status.js';

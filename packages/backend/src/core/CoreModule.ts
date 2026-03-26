@@ -53,6 +53,7 @@ import { ReactionService } from './ReactionService.js';
 import { ReactionsBufferingService } from './ReactionsBufferingService.js';
 import { RelayService } from './RelayService.js';
 import { RoleService } from './RoleService.js';
+import { VrchatService } from './VrchatService.js';
 import { S3Service } from './S3Service.js';
 import { SignupService } from './SignupService.js';
 import { WebAuthnService } from './WebAuthnService.js';
@@ -197,6 +198,7 @@ const $ReactionService: Provider = { provide: 'ReactionService', useExisting: Re
 const $ReactionsBufferingService: Provider = { provide: 'ReactionsBufferingService', useExisting: ReactionsBufferingService };
 const $RelayService: Provider = { provide: 'RelayService', useExisting: RelayService };
 const $RoleService: Provider = { provide: 'RoleService', useExisting: RoleService };
+const $VrchatService: Provider = { provide: 'VrchatService', useExisting: VrchatService };
 const $S3Service: Provider = { provide: 'S3Service', useExisting: S3Service };
 const $SignupService: Provider = { provide: 'SignupService', useExisting: SignupService };
 const $WebAuthnService: Provider = { provide: 'WebAuthnService', useExisting: WebAuthnService };
@@ -382,6 +384,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		RegistryApiService,
 		ReversiService,
 		PageService,
+		VrchatService,
 
 		ChartLoggerService,
 		FederationChart,
@@ -532,6 +535,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$RegistryApiService,
 		$ReversiService,
 		$PageService,
+		$VrchatService,
 
 		$ChartLoggerService,
 		$FederationChart,
@@ -682,6 +686,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		RegistryApiService,
 		ReversiService,
 		PageService,
+		VrchatService,
 
 		FederationChart,
 		NotesChart,
@@ -830,6 +835,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$RegistryApiService,
 		$ReversiService,
 		$PageService,
+		$VrchatService,
 
 		$FederationChart,
 		$NotesChart,

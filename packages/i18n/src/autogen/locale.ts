@@ -13258,4 +13258,254 @@ export interface Locale extends ILocale {
          */
         "mfm": string;
     };
+    /**
+     * VRChat
+     */
+    "vrchat": string;
+    "_vrchat": {
+        /**
+         * VRChat連携
+         */
+        "binding": string;
+        /**
+         * VRChatアカウントを連携
+         */
+        "bindVrchat": string;
+        /**
+         * 連携解除
+         */
+        "unbindVrchat": string;
+        /**
+         * ユーザーを検索
+         */
+        "searchUser": string;
+        /**
+         * VRChat表示名で検索
+         */
+        "searchByDisplayName": string;
+        /**
+         * 連携するVRChatアカウントを選択
+         */
+        "selectUser": string;
+        /**
+         * 連携を開始
+         */
+        "startBind": string;
+        /**
+         * 認証キー
+         */
+        "verificationKey": string;
+        /**
+         * 以下のキーをVRChatプロフィールの末尾に追加してから、認証ボタンを押してください
+         */
+        "verificationHint": string;
+        /**
+         * 認証
+         */
+        "verify": string;
+        /**
+         * 認証成功！VRChatアカウントが連携されました
+         */
+        "verifySuccess": string;
+        /**
+         * 認証に失敗しました。キーがプロフィールに追加されているか確認してください
+         */
+        "verifyFailed": string;
+        /**
+         * 連携済みアカウント
+         */
+        "boundAccount": string;
+        /**
+         * 信頼ランク
+         */
+        "trustRank": string;
+        /**
+         * 情報を更新
+         */
+        "refreshInfo": string;
+        /**
+         * あと{seconds}秒お待ちください
+         */
+        "refreshCooldown": ParameterizedString<"seconds">;
+        /**
+         * 情報が更新されました
+         */
+        "refreshSuccess": string;
+        /**
+         * VRChat連携を解除しますか？
+         */
+        "unbindConfirm": string;
+        /**
+         * VRChat連携機能は有効化されていません
+         */
+        "notEnabled": string;
+        /**
+         * VRChatアカウントが連携されていません
+         */
+        "noBinding": string;
+        /**
+         * VRChatアカウントはすでに連携されています
+         */
+        "alreadyBound": string;
+        /**
+         * このVRChatアカウントは他のユーザーに連携されています
+         */
+        "accountTaken": string;
+        /**
+         * VRChatプロフィールに認証キーが見つかりません
+         */
+        "keyNotFound": string;
+        /**
+         * ビジター
+         */
+        "visitor": string;
+        /**
+         * New User
+         */
+        "newUser": string;
+        /**
+         * User
+         */
+        "user": string;
+        /**
+         * Known User
+         */
+        "knownUser": string;
+        /**
+         * Trusted User
+         */
+        "trustedUser": string;
+        /**
+         * VRChatプロフィールを見る
+         */
+        "viewVrcProfile": string;
+        /**
+         * VRChat設定
+         */
+        "config": string;
+        /**
+         * VRChat連携を有効化
+         */
+        "enableIntegration": string;
+        /**
+         * Botアカウント設定
+         */
+        "botAccount": string;
+        /**
+         * Botユーザー名
+         */
+        "botUsername": string;
+        /**
+         * Botパスワード
+         */
+        "botPassword": string;
+        /**
+         * ログイン
+         */
+        "botLogin": string;
+        /**
+         * 二要素認証コード
+         */
+        "bot2fa": string;
+        /**
+         * 認証
+         */
+        "botVerify2fa": string;
+        /**
+         * Bot状態
+         */
+        "botStatus": string;
+        /**
+         * ログイン済み
+         */
+        "botLoggedIn": string;
+        /**
+         * 未ログイン
+         */
+        "botNotLoggedIn": string;
+        /**
+         * ログイン成功
+         */
+        "botLoginSuccess": string;
+        /**
+         * ログインに失敗しました
+         */
+        "botLoginFailed": string;
+        /**
+         * 二要素認証が必要です
+         */
+        "botRequires2fa": string;
+        /**
+         * ロール設定
+         */
+        "roleConfig": string;
+        /**
+         * 認証済みロール
+         */
+        "verifiedRole": string;
+        /**
+         * ビジターロール
+         */
+        "visitorRole": string;
+        /**
+         * New Userロール
+         */
+        "newUserRole": string;
+        /**
+         * Userロール
+         */
+        "userRole": string;
+        /**
+         * Known Userロール
+         */
+        "knownUserRole": string;
+        /**
+         * Trusted Userロール
+         */
+        "trustedUserRole": string;
+        /**
+         * カラー設定
+         */
+        "colorConfig": string;
+        /**
+         * ビジターカラー
+         */
+        "visitorColor": string;
+        /**
+         * New Userカラー
+         */
+        "newUserColor": string;
+        /**
+         * Userカラー
+         */
+        "userColor": string;
+        /**
+         * Known Userカラー
+         */
+        "knownUserColor": string;
+        /**
+         * Trusted Userカラー
+         */
+        "trustedUserColor": string;
+        /**
+         * キャッシュ設定
+         */
+        "cacheConfig": string;
+        /**
+         * キャッシュ有効期限（分）
+         */
+        "cacheTtl": string;
+        /**
+         * 手動更新クールダウン（分）
+         */
+        "refreshCooldownConfig": string;
+        /**
+         * 設定を保存
+         */
+        "saveConfig": string;
+        /**
+         * 設定が保存されました
+         */
+        "configSaved": string;
+    };
 }
