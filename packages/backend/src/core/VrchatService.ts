@@ -62,6 +62,8 @@ export class VrchatService implements OnModuleInit {
 		return new VrcClient(
 			config.botAuthCookie,
 			(cookieString) => this.saveClientCookies(cookieString),
+			config.botUsername,
+			config.botPassword,
 		);
 	}
 

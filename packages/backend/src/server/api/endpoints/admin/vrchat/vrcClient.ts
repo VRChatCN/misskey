@@ -15,11 +15,18 @@ export class VrcClient {
 	private loginPassword: string | null = null;
 	private reloginPromise: Promise<boolean> | null = null;
 
-	constructor(cookie: string | null | undefined, onUpdateCookie: ((cookie: string) => any) | undefined) {
+	constructor(cookie: string | null | undefined, onUpdateCookie: ((cookie: string) => any) | undefined, loginUsername?: string | null, loginPassword?: string | null) {
 		if (cookie) {
 			this.cookies = this.cookieStringToMap(cookie);
 		}
 		this.onUpdateCookie = onUpdateCookie;
+		if (loginUsername && loginPassword) {
+			this.loginUsername = loginUsername;
+			this.loginPassword = loginPassword;
+			if (cookie) {
+				this.hasLoggedInOnce = true;
+			}
+		}
 	}
 
 	cookieStringToMap(cookieString: string): Record<string, string> {
@@ -142,6 +149,9 @@ export class VrcClient {
 		const response = await this.sendRequest('auth/user', 'GET');
 		const data = await response.json() as LoginResponse;
 		data['httpStatusCode'] = response.status;
+		if (!data.requiresTwoFactorAuth) {
+			this.hasLoggedInOnce = true;
+		}
 		return data;
 	}
 
