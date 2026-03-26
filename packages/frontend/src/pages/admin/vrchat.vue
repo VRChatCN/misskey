@@ -52,24 +52,24 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<FormSection>
 				<template #label>{{ i18n.ts._vrchat.roleConfig }}</template>
 				<div class="_gaps_s">
-					<MkInput v-model="verifiedRoleId" :placeholder="'Role ID'">
+					<MkSelect v-model="verifiedRoleId" :items="roleOptions">
 						<template #label>{{ i18n.ts._vrchat.verifiedRole }}</template>
-					</MkInput>
-					<MkInput v-model="visitorRoleId" :placeholder="'Role ID'">
+					</MkSelect>
+					<MkSelect v-model="visitorRoleId" :items="roleOptions">
 						<template #label>{{ i18n.ts._vrchat.visitorRole }}</template>
-					</MkInput>
-					<MkInput v-model="newUserRoleId" :placeholder="'Role ID'">
+					</MkSelect>
+					<MkSelect v-model="newUserRoleId" :items="roleOptions">
 						<template #label>{{ i18n.ts._vrchat.newUserRole }}</template>
-					</MkInput>
-					<MkInput v-model="userRoleId" :placeholder="'Role ID'">
+					</MkSelect>
+					<MkSelect v-model="userRoleId" :items="roleOptions">
 						<template #label>{{ i18n.ts._vrchat.userRole }}</template>
-					</MkInput>
-					<MkInput v-model="knownUserRoleId" :placeholder="'Role ID'">
+					</MkSelect>
+					<MkSelect v-model="knownUserRoleId" :items="roleOptions">
 						<template #label>{{ i18n.ts._vrchat.knownUserRole }}</template>
-					</MkInput>
-					<MkInput v-model="trustedUserRoleId" :placeholder="'Role ID'">
+					</MkSelect>
+					<MkSelect v-model="trustedUserRoleId" :items="roleOptions">
 						<template #label>{{ i18n.ts._vrchat.trustedUserRole }}</template>
-					</MkInput>
+					</MkSelect>
 				</div>
 			</FormSection>
 
@@ -130,6 +130,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { ref, computed, onMounted } from 'vue';
 import FormSection from '@/components/form/section.vue';
 import MkInput from '@/components/MkInput.vue';
+import MkSelect from '@/components/MkSelect.vue';
 import MkButton from '@/components/MkButton.vue';
 import MkSwitch from '@/components/MkSwitch.vue';
 import MkInfo from '@/components/MkInfo.vue';
@@ -163,6 +164,22 @@ const trustedUserColor = ref('#8143E6');
 
 const cacheTtlMinutes = ref(360);
 const manualRefreshCooldownMinutes = ref(5);
+
+const roles = ref<{ id: string; name: string }[]>([]);
+
+const roleOptions = computed(() => [
+	{ label: `(${i18n.ts.notSet})`, value: '' },
+	...roles.value.map(r => ({ label: `${r.name} (${r.id})`, value: r.id })),
+]);
+
+async function loadRoles() {
+	try {
+		const result = await misskeyApi('admin/roles/list');
+		roles.value = result.map(r => ({ id: r.id, name: r.name }));
+	} catch (e) {
+		console.error('Failed to load roles', e);
+	}
+}
 
 async function loadConfig() {
 	try {
@@ -264,7 +281,7 @@ async function saveConfig() {
 }
 
 onMounted(async () => {
-	await Promise.all([loadConfig(), loadBotStatus()]);
+	await Promise.all([loadConfig(), loadBotStatus(), loadRoles()]);
 });
 
 const headerActions = computed(() => []);

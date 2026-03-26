@@ -19,7 +19,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkInput v-model="searchQuery" :placeholder="i18n.ts._vrchat.searchByDisplayName">
 					<template #prefix><i class="ti ti-search"></i></template>
 				</MkInput>
-				<MkButton primary :disabled="!searchQuery" @click="doSearch">{{ i18n.ts._vrchat.searchUser }}</MkButton>
+				<MkButton primary :disabled="!searchQuery || searching" @click="doSearch">{{ i18n.ts._vrchat.searchUser }}</MkButton>
 
 				<div v-if="searchResults.length > 0" class="_gaps_s">
 					<div style="font-weight: bold;">{{ i18n.ts._vrchat.selectUser }}</div>
@@ -41,7 +41,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<code>{{ verificationKey }}</code>
 					<MkButton small @click="copyKey"><i class="ti ti-copy"></i></MkButton>
 				</div>
-				<MkButton primary @click="doVerify">{{ i18n.ts._vrchat.verify }}</MkButton>
+				<MkButton primary :disabled="verifying" @click="doVerify">{{ i18n.ts._vrchat.verify }}</MkButton>
 			</div>
 		</div>
 
@@ -73,7 +73,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import FormSection from '@/components/form/section.vue';
 import MkInput from '@/components/MkInput.vue';
 import MkButton from '@/components/MkButton.vue';
@@ -93,6 +93,8 @@ const searchResults = ref<{ id: string; displayName: string }[]>([]);
 const selectedUser = ref<{ id: string; displayName: string } | null>(null);
 const verificationKey = ref('');
 const refreshing = ref(false);
+const searching = ref(false);
+const verifying = ref(false);
 
 const trustRankLabels: Record<string, string> = {
 	visitor: i18n.ts._vrchat.visitor,
@@ -127,19 +129,21 @@ async function loadConfig() {
 async function loadBinding() {
 	if (!$i) return;
 	try {
-		const info = await misskeyApi('vrchat/info', { userId: $i.id });
-		binding.value = info;
+		binding.value = await misskeyApi('vrchat/info', { userId: $i.id });
 	} catch {
 		binding.value = null;
 	}
 }
 
 async function doSearch() {
+	searching.value = true;
 	try {
 		searchResults.value = await misskeyApi('vrchat/search', { query: searchQuery.value });
 		selectedUser.value = null;
 	} catch (e: any) {
 		os.alert({ type: 'error', text: e.message || String(e) });
+	} finally {
+		searching.value = false;
 	}
 }
 
@@ -155,6 +159,7 @@ async function doBind() {
 }
 
 async function doVerify() {
+	verifying.value = true;
 	try {
 		await misskeyApi('vrchat/verify');
 		os.alert({ type: 'success', text: i18n.ts._vrchat.verifySuccess });
@@ -162,6 +167,8 @@ async function doVerify() {
 		step.value = 'search';
 	} catch (e: any) {
 		os.alert({ type: 'error', text: i18n.ts._vrchat.verifyFailed });
+	} finally {
+		verifying.value = false;
 	}
 }
 
@@ -190,7 +197,7 @@ async function doUnbind() {
 		binding.value = null;
 		step.value = 'search';
 	} catch (e: any) {
-		os.alert({ type: 'error', text: e.message || String(e) });
+		os.alert({ type: 'error', text: e.message ?? String(e) });
 	}
 }
 

@@ -117,5 +117,124 @@ export type Endpoints = Overwrite<
 			req: EmptyRequest;
 			res: EmptyResponse;
 		},
+		'admin/vrchat/config': {
+			req: EmptyRequest;
+			res: {
+				enabled: boolean;
+				botUsername: string | null;
+				cacheTtlMinutes: number;
+				manualRefreshCooldownMinutes: number;
+				verifiedRoleId: string | null;
+				visitorRoleId: string | null;
+				newUserRoleId: string | null;
+				userRoleId: string | null;
+				knownUserRoleId: string | null;
+				trustedUserRoleId: string | null;
+				visitorColor: string;
+				newUserColor: string;
+				userColor: string;
+				knownUserColor: string;
+				trustedUserColor: string;
+			};
+		},
+		'admin/vrchat/update-config': {
+			req: {
+				enabled?: boolean;
+				cacheTtlMinutes?: number;
+				manualRefreshCooldownMinutes?: number;
+				verifiedRoleId?: string | null;
+				visitorRoleId?: string | null;
+				newUserRoleId?: string | null;
+				userRoleId?: string | null;
+				knownUserRoleId?: string | null;
+				trustedUserRoleId?: string | null;
+				visitorColor?: string;
+				newUserColor?: string;
+				userColor?: string;
+				knownUserColor?: string;
+				trustedUserColor?: string;
+			};
+			res: EmptyResponse;
+		},
+		'admin/vrchat/login': {
+			req: {
+				username: string;
+				password: string;
+			};
+			res: {
+				success: boolean;
+				requires2fa: string[] | false;
+				displayName?: string;
+			};
+		},
+		'admin/vrchat/verify-2fa': {
+			req: {
+				code: string;
+				method?: 'totp' | 'emailOtp';
+			};
+			res: {
+				success: boolean;
+				displayName?: string;
+			};
+		},
+		'admin/vrchat/status': {
+			req: EmptyRequest;
+			res: {
+				loggedIn: boolean;
+				displayName?: string;
+				error?: string;
+			};
+		},
+		'vrchat/config': {
+			req: EmptyRequest;
+			res: {
+				enabled: boolean;
+				cacheTtlMinutes: number;
+				manualRefreshCooldownMinutes: number;
+				colors: Record<string, string>;
+			};
+		},
+		'vrchat/info': {
+			req: {
+				userId: string;
+			};
+			res: {
+				vrchatId: string;
+				displayName: string | null;
+				trustRank: string | null;
+				cachedAt: string | null;
+			} | null;
+		},
+		'vrchat/search': {
+			req: {
+				query: string;
+			};
+			res: {
+				id: string;
+				displayName: string;
+			}[];
+		},
+		'vrchat/bind': {
+			req: {
+				vrchatId: string;
+			};
+			res: {
+				verificationKey: string;
+			};
+		},
+		'vrchat/verify': {
+			req: EmptyRequest;
+			res: EmptyResponse;
+		},
+		'vrchat/refresh': {
+			req: EmptyRequest;
+			res: {
+				cooldownSeconds?: number;
+			};
+		},
+		'vrchat/unbind': {
+			req: EmptyRequest;
+			res: EmptyResponse;
+		},
 	}
 >;
