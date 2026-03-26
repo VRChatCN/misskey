@@ -10,6 +10,11 @@ export class VrcClient {
 	ua = 'MisskeyVrchatIntegration/1.0.0 yukinekovrc@outlook.com';
 	onUpdateCookie: ((cookie: string) => any) | undefined = undefined;
 
+	private hasLoggedInOnce = false;
+	private loginUsername: string | null = null;
+	private loginPassword: string | null = null;
+	private reloginPromise: Promise<boolean> | null = null;
+
 	constructor(cookie: string | null | undefined, onUpdateCookie: ((cookie: string) => any) | undefined) {
 		if (cookie) {
 			this.cookies = this.cookieStringToMap(cookie);
@@ -67,7 +72,7 @@ export class VrcClient {
 			.join('; ');
 	}
 
-	async sendRequest(path: string, method: 'GET' | 'POST', body?: any, addHeaders?: Record<string, string>) {
+	async sendRequest(path: string, method: 'GET' | 'POST', body?: any, addHeaders?: Record<string, string>, _skipReauth = false): Promise<Response> {
 		const headers: Record<string, string> = {
 			'User-Agent': this.ua,
 			'Cookie': this.mapToCookieString(this.cookies),
@@ -85,6 +90,12 @@ export class VrcClient {
 			body: body ? JSON.stringify(body) : undefined,
 		});
 		if (!response.ok) {
+			if (response.status === 401 && !_skipReauth && this.hasLoggedInOnce) {
+				const reloginOk = await this.doRelogin();
+				if (reloginOk) {
+					return this.sendRequest(path, method, body, addHeaders, true);
+				}
+			}
 			throw new Error(`Request failed with status ${response.status}`);
 		}
 
@@ -100,6 +111,33 @@ export class VrcClient {
 		return response;
 	}
 
+	private async doRelogin(): Promise<boolean> {
+		if (this.reloginPromise) return this.reloginPromise;
+		this.reloginPromise = this._executeRelogin();
+		try {
+			return await this.reloginPromise;
+		} finally {
+			this.reloginPromise = null;
+		}
+	}
+
+	private async _executeRelogin(): Promise<boolean> {
+		if (!this.loginUsername || !this.loginPassword) return false;
+		try {
+			const response = await this.sendRequest('auth/user', 'GET', undefined, {
+				Authorization: `Basic ${btoa(encodeURIComponent(this.loginUsername) + ':' + encodeURIComponent(this.loginPassword))}`,
+			}, true);
+			const data = await response.json() as LoginResponse;
+			if (data.requiresTwoFactorAuth) {
+				return false;
+			}
+			this.hasLoggedInOnce = true;
+			return true;
+		} catch {
+			return false;
+		}
+	}
+
 	public async getCurrentUser() {
 		const response = await this.sendRequest('auth/user', 'GET');
 		const data = await response.json() as LoginResponse;
@@ -110,10 +148,17 @@ export class VrcClient {
 	public async login(username: string, password: string) {
 		const response = await this.sendRequest('auth/user', 'GET', undefined, {
 			Authorization: `Basic ${btoa(encodeURIComponent(username) + ':' + encodeURIComponent(password))}`,
-		});
+		}, true);
 
 		const data = await response.json() as LoginResponse;
 		data['httpStatusCode'] = response.status;
+
+		this.loginUsername = username;
+		this.loginPassword = password;
+		if (!data.requiresTwoFactorAuth) {
+			this.hasLoggedInOnce = true;
+		}
+
 		return data;
 	}
 
@@ -123,7 +168,9 @@ export class VrcClient {
 			return false;
 		}
 		const responseJson = await response.json() as any;
-		return responseJson.verified === true;
+		const verified = responseJson.verified === true;
+		if (verified) this.hasLoggedInOnce = true;
+		return verified;
 	}
 
 	public async verify2Fa(code: string) {
@@ -132,7 +179,9 @@ export class VrcClient {
 			return false;
 		}
 		const responseJson = await response.json() as any;
-		return responseJson.verified === true;
+		const verified = responseJson.verified === true;
+		if (verified) this.hasLoggedInOnce = true;
+		return verified;
 	}
 
 	public async searchUsersByDisplayName(displayName: string) {
