@@ -7,7 +7,7 @@ import {
 export class VrcClient {
 	endpoint = 'https://api.vrchat.cloud/api/1/';
 	cookies: Record<string, string> = {};
-	ua = 'MisskeyVrchatIntegration/1.0.0 admin@misskey.local';
+	ua = 'MisskeyVrchatIntegration/1.0.0 yukinekovrc@outlook.com';
 	onUpdateCookie: ((cookie: string) => any) | undefined = undefined;
 
 	constructor(cookie: string | null | undefined, onUpdateCookie: ((cookie: string) => any) | undefined) {
