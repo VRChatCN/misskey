@@ -48,6 +48,9 @@ import type { AnnouncementService } from '@/core/AnnouncementService.js';
 import type { CustomEmojiService } from '@/core/CustomEmojiService.js';
 import { AvatarDecorationService } from '@/core/AvatarDecorationService.js';
 import { ChatService } from '@/core/ChatService.js';
+import { VrchatService } from '@/core/VrchatService.js';
+import type { VrchatBindingsRepository } from '@/models/_.js';
+import type { MiVrchatBinding } from '@/models/VrchatBinding.js';
 import type { OnModuleInit } from '@nestjs/common';
 import type { NoteEntityService } from './NoteEntityService.js';
 import type { PageEntityService } from './PageEntityService.js';
@@ -94,6 +97,7 @@ export class UserEntityService implements OnModuleInit {
 	private idService: IdService;
 	private avatarDecorationService: AvatarDecorationService;
 	private chatService: ChatService;
+	private vrchatService: VrchatService;
 
 	constructor(
 		private moduleRef: ModuleRef,
@@ -136,6 +140,9 @@ export class UserEntityService implements OnModuleInit {
 
 		@Inject(DI.userMemosRepository)
 		private userMemosRepository: UserMemoRepository,
+
+		@Inject(DI.vrchatBindingsRepository)
+		private vrchatBindingsRepository: VrchatBindingsRepository,
 	) {
 	}
 
@@ -150,6 +157,7 @@ export class UserEntityService implements OnModuleInit {
 		this.idService = this.moduleRef.get('IdService');
 		this.avatarDecorationService = this.moduleRef.get('AvatarDecorationService');
 		this.chatService = this.moduleRef.get('ChatService');
+		this.vrchatService = this.moduleRef.get('VrchatService');
 	}
 
 	//#region Validators
@@ -411,6 +419,7 @@ export class UserEntityService implements OnModuleInit {
 			userRelations?: Map<MiUser['id'], UserRelation>,
 			userMemos?: Map<MiUser['id'], string | null>,
 			pinNotes?: Map<MiUser['id'], MiUserNotePining[]>,
+			vrchatBindings?: Map<MiUser['id'], MiVrchatBinding>,
 		},
 	): Promise<Packed<S>> {
 		const opts = Object.assign({
@@ -522,6 +531,15 @@ export class UserEntityService implements OnModuleInit {
 					displayOrder: r.displayOrder,
 				})),
 			) : undefined,
+			vrchatBinding: (user.host == null) ? (async () => {
+				let vb: MiVrchatBinding | null | undefined;
+				if (opts.vrchatBindings) {
+					vb = opts.vrchatBindings.get(user.id);
+				} else {
+					vb = await this.vrchatBindingsRepository.findOneBy({ userId: user.id, verified: true });
+				}
+				return vb ? { vrchatId: vb.vrchatId, displayName: vb.displayName, trustRank: vb.trustRank } : undefined;
+			})() : undefined,
 
 			...(isDetailed ? {
 				url: profile!.url,
@@ -682,6 +700,15 @@ export class UserEntityService implements OnModuleInit {
 		let userMemos: Map<MiUser['id'], string | null> = new Map();
 		let pinNotes: Map<MiUser['id'], MiUserNotePining[]> = new Map();
 
+		const localUserIds = _users.filter(u => u.host == null).map(u => u.id);
+		const vrchatBindings: Map<MiUser['id'], MiVrchatBinding> = localUserIds.length > 0
+			? await this.vrchatBindingsRepository.createQueryBuilder('vb')
+				.where('vb.userId IN (:...userIds)', { userIds: localUserIds })
+				.andWhere('vb.verified = true')
+				.getMany()
+				.then(bindings => new Map(bindings.map(b => [b.userId, b])))
+			: new Map();
+
 		if (options?.schema !== 'UserLite') {
 			profilesMap = await this.userProfilesRepository.findBy({ userId: In(_userIds) })
 				.then(profiles => new Map(profiles.map(p => [p.userId, p])));
@@ -724,6 +751,7 @@ export class UserEntityService implements OnModuleInit {
 					userRelations: userRelations,
 					userMemos: userMemos,
 					pinNotes: pinNotes,
+					vrchatBindings: vrchatBindings,
 				},
 			)),
 		);

@@ -84,6 +84,8 @@ import {
 	MiChatRoomMembership,
 	MiChatRoomInvitation,
 	MiChatApproval,
+	MiVrchatBinding,
+	MiVrchatConfig,
 } from './_.js';
 import type { Provider } from '@nestjs/common';
 import type { DataSource } from 'typeorm';
@@ -544,6 +546,18 @@ const $reversiGamesRepository: Provider = {
 	inject: [DI.db],
 };
 
+const $vrchatBindingsRepository: Provider = {
+	provide: DI.vrchatBindingsRepository,
+	useFactory: (db: DataSource) => db.getRepository(MiVrchatBinding).extend(miRepository as MiRepository<MiVrchatBinding>),
+	inject: [DI.db],
+};
+
+const $vrchatConfigRepository: Provider = {
+	provide: DI.vrchatConfigRepository,
+	useFactory: (db: DataSource) => db.getRepository(MiVrchatConfig).extend(miRepository as MiRepository<MiVrchatConfig>),
+	inject: [DI.db],
+};
+
 @Module({
 	imports: [],
 	providers: [
@@ -623,6 +637,8 @@ const $reversiGamesRepository: Provider = {
 		$chatApprovalsRepository,
 		$bubbleGameRecordsRepository,
 		$reversiGamesRepository,
+		$vrchatBindingsRepository,
+		$vrchatConfigRepository,
 	],
 	exports: [
 		$usersRepository,
@@ -701,6 +717,8 @@ const $reversiGamesRepository: Provider = {
 		$chatApprovalsRepository,
 		$bubbleGameRecordsRepository,
 		$reversiGamesRepository,
+		$vrchatBindingsRepository,
+		$vrchatConfigRepository,
 	],
 })
 export class RepositoryModule {

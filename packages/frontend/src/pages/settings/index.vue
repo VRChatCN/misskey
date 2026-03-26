@@ -108,6 +108,11 @@ const menuDef = computed<SuperMenuDef[]>(() => [{
 		text: i18n.ts.security,
 		to: '/settings/security',
 		active: currentPage.value?.route.name === 'security',
+	}, {
+		icon: 'ti ti-device-gamepad-2',
+		text: i18n.ts._vrchat.binding,
+		to: '/settings/vrchat',
+		active: currentPage.value?.route.name === 'vrchat',
 	}],
 }, {
 	items: [{

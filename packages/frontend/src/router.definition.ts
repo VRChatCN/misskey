@@ -109,6 +109,10 @@ export const ROUTE_DEF = [{
 		name: 'email',
 		component: page(() => import('@/pages/settings/email.vue')),
 	}, {
+		path: '/vrchat',
+		name: 'vrchat',
+		component: page(() => import('@/pages/settings/vrchat.vue')),
+	}, {
 		path: '/security',
 		name: 'security',
 		component: page(() => import('@/pages/settings/security.vue')),
@@ -482,6 +486,10 @@ export const ROUTE_DEF = [{
 		path: '/security',
 		name: 'security',
 		component: page(() => import('@/pages/admin/security.vue')),
+	}, {
+		path: '/vrchat',
+		name: 'vrchat',
+		component: page(() => import('@/pages/admin/vrchat.vue')),
 	}, {
 		path: '/relays',
 		name: 'relays',

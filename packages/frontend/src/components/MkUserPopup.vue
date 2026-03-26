@@ -29,6 +29,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkA :class="$style.name" :to="userPage(user)"><MkUserName :user="user" :nowrap="false"/></MkA>
 				<div :class="$style.username"><MkAcct :user="user"/></div>
 			</div>
+			<div v-if="(user as any).vrchatBinding" :class="$style.vrchatRow">
+				<MkVrchatInfo :vrchatBinding="(user as any).vrchatBinding"/>
+			</div>
 			<div :class="$style.description">
 				<Mfm v-if="user.description" :class="$style.mfm" :text="user.description" :author="user"/>
 				<div v-else style="opacity: 0.7;">{{ i18n.ts.noAccountDescription }}</div>
@@ -61,6 +64,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { onMounted, ref } from 'vue';
 import * as Misskey from 'misskey-js';
 import MkFollowButton from '@/components/MkFollowButton.vue';
+import MkVrchatInfo from '@/components/MkVrchatInfo.vue';
 import { userPage } from '@/filters/user.js';
 import * as os from '@/os.js';
 import { misskeyApi } from '@/utility/misskey-api.js';
@@ -204,6 +208,12 @@ onMounted(() => {
 	display: block;
 	font-size: 0.8em;
 	opacity: 0.7;
+}
+
+.vrchatRow {
+	padding: 4px 26px;
+	text-align: center;
+	font-size: 0.85em;
 }
 
 .description {

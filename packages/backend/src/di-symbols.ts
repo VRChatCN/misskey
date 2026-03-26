@@ -91,5 +91,7 @@ export const DI = {
 	bubbleGameRecordsRepository: Symbol('bubbleGameRecordsRepository'),
 	reversiGamesRepository: Symbol('reversiGamesRepository'),
 	noteDraftsRepository: Symbol('noteDraftsRepository'),
+	vrchatBindingsRepository: Symbol('vrchatBindingsRepository'),
+	vrchatConfigRepository: Symbol('vrchatConfigRepository'),
 	//#endregion
 };

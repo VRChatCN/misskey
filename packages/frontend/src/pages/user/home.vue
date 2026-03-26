@@ -61,6 +61,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 								</MkA>
 							</span>
 						</div>
+						<div v-if="(user as any).vrchatBinding" class="description">
+							<MkVrchatInfo :vrchatBinding="(user as any).vrchatBinding"/>
+						</div>
 						<div v-if="iAmModerator" class="moderationNote">
 							<MkTextarea v-if="editModerationNote || (moderationNote != null && moderationNote !== '')" v-model="moderationNote" manualSave>
 								<template #label>{{ i18n.ts.moderationNote }}</template>
@@ -171,6 +174,7 @@ import MkTextarea from '@/components/MkTextarea.vue';
 import MkOmit from '@/components/MkOmit.vue';
 import MkInfo from '@/components/MkInfo.vue';
 import MkButton from '@/components/MkButton.vue';
+import MkVrchatInfo from '@/components/MkVrchatInfo.vue';
 import { getUserMenu } from '@/utility/get-user-menu.js';
 import number from '@/filters/number.js';
 import { userPage } from '@/filters/user.js';
